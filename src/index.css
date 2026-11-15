@@ -1,0 +1,107 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@theme inline {
+  --font-sans: 'Manrope Variable', system-ui, sans-serif;
+  --font-quran: 'Amiri Quran', 'Amiri', serif;
+  --font-arabic: 'Amiri', serif;
+
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-label: var(--label);
+  --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
+  --color-separator: var(--separator);
+  --color-fill: var(--fill);
+  --color-tint: var(--tint);
+  --color-tint-soft: var(--tint-soft);
+  --color-gold: var(--gold);
+  --color-destructive: var(--destructive);
+}
+
+:root {
+  color-scheme: light;
+  --canvas: #f2f2f7;
+  --surface: #ffffff;
+  --label: #1d1d1f;
+  --secondary: #6e6e73;
+  --tertiary: #aeaeb2;
+  --separator: rgba(60, 60, 67, 0.13);
+  --fill: rgba(118, 118, 128, 0.12);
+  --tint: #0b7a5c;
+  --tint-soft: rgba(16, 150, 110, 0.12);
+  --gold: #9a6b12;
+  --destructive: #d70015;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --canvas: #000000;
+  --surface: #1c1c1e;
+  --label: #f5f5f7;
+  --secondary: #98989f;
+  --tertiary: #636366;
+  --separator: rgba(84, 84, 88, 0.55);
+  --fill: rgba(118, 118, 128, 0.24);
+  --tint: #34c79a;
+  --tint-soft: rgba(52, 199, 154, 0.16);
+  --gold: #e0b45a;
+  --destructive: #ff453a;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background: var(--canvas);
+    color: var(--label);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    letter-spacing: -0.01em;
+    overscroll-behavior-y: none;
+    -webkit-font-smoothing: antialiased;
+  }
+  button {
+    cursor: pointer;
+  }
+  :focus-visible {
+    outline: 2px solid var(--tint);
+    outline-offset: 2px;
+  }
+}
+
+/* Quran text: generous line height so marks never collide between lines. */
+.quran {
+  font-family: var(--font-quran);
+  line-height: 2.3;
+  word-spacing: 0.05em;
+}
+.arabic {
+  font-family: var(--font-arabic);
+  line-height: 2;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.ease-sheet {
+  transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

@@ -1,148 +1,20 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Islam OS 3.0 - Hybrid Edition</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
-    
-    <!-- PWA / Add to Home Screen Meta Tags -->
-    <meta name="theme-color" content="#10b981">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Islam OS">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2310b981'/%3E%3Ctext x='50' y='65' font-size='50' text-anchor='middle' fill='white'%3E%E2%98%AA%3C/text%3E%3C/svg%3E">
-
-    </head>
-<body>
-
-<div id="bg-layer-1" class="fixed inset-0 bg-cover bg-center transition-opacity duration-[2000ms] z-0"></div>
-<div id="bg-layer-2" class="fixed inset-0 bg-cover bg-center transition-opacity duration-[2000ms] opacity-0 z-0"></div>
-
-<div id="lockscreen">
-    <div class="text-center mt-12 flex flex-col items-center">
-        <i class="ph-fill ph-lock-key text-2xl text-emerald-400 mb-4" id="lock-icon"></i>
-        <div id="lock-time" class="lock-clock font-sans tracking-tight">00:00</div>
-        <div id="lock-date" class="lock-date text-emerald-300">Loading...</div>
-    </div>
-    
-    <div class="mb-16 flex flex-col items-center">
-        <div class="flex items-center gap-2 mb-6">
-            <i class="ph-fill ph-bell text-emerald-400 text-sm"></i>
-            <span class="text-sm font-medium opacity-80" id="lock-next-prayer">Syncing Prayer Times...</span>
-        </div>
-        <button onclick="OS.unlock()" class="bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white px-8 py-3 rounded-full font-semibold text-lg transition transform hover:scale-105 shadow-xl flex items-center gap-2">
-            Enter System <i class="ph-bold ph-arrow-right"></i>
-        </button>
-    </div>
-</div>
-
-<div id="desktop-environment">
-    <div id="menubar">
-        <div class="menubar-left flex items-center gap-4">
-            <div class="sys-logo flex items-center cursor-pointer hover:opacity-80 transition" onclick="OS.toggleStartMenu()">
-                <i class="ph-fill ph-moon-stars text-xl text-emerald-400 mr-2"></i>
-                <span class="font-bold tracking-wide">Islam OS</span>
-            </div>
-            <div class="hidden sm:flex gap-5 text-gray-300 ml-4 font-medium">
-                <span class="hover:text-white cursor-pointer transition">File</span>
-                <span class="hover:text-white cursor-pointer transition">Edit</span>
-                <span class="hover:text-white cursor-pointer transition">View</span>
-            </div>
-        </div>
-        <div class="menubar-right flex items-center gap-4">
-            <div id="quick-prayer-status" class="text-sm font-bold text-emerald-400 flex items-center gap-1.5 cursor-pointer hover:text-emerald-300 transition bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20" onclick="OS.openApp('prayer')">
-                <i class="ph-fill ph-mosque text-base"></i> <span id="tb-prayer-text" class="hidden sm:inline">Syncing...</span>
-            </div>
-            <i class="ph ph-corners-out cursor-pointer hover:text-white text-gray-300 transition text-lg" onclick="FocusEngine.promptFocusMode()" title="Focus Mode / Fullscreen"></i>
-            <i class="ph-bold ph-wifi-high text-gray-300 text-lg"></i>
-            <div class="flex items-center gap-2 ml-2 cursor-pointer hover:text-emerald-400 transition" onclick="OS.toggleWidgetPanel()">
-                <span id="sys-hijri" class="text-sm text-gray-400 hidden md:block"></span>
-                <span id="sys-time" class="font-semibold text-base">00:00</span>
-            </div>
-        </div>
-    </div>
-
-    <div id="desktop-widgets" class="absolute top-16 left-10 w-72 flex-col gap-6 hidden md:flex pointer-events-auto">
-        <div class="glass p-6 rounded-3xl border border-white/10 shadow-[0_15px_30px_rgba(0,0,0,0.4)] cursor-pointer hover:bg-white/5 transition duration-300" onclick="OS.openApp('calendar')">
-            <div class="text-6xl font-bold text-white tracking-tighter mb-2" id="desk-wid-time">00:00</div>
-            <div class="text-emerald-400 font-bold text-sm uppercase tracking-widest mb-1" id="desk-wid-date">Loading...</div>
-            <div class="text-gray-400 text-sm font-medium" id="desk-wid-hijri">Loading...</div>
-        </div>
-        <div class="glass p-6 rounded-3xl border border-white/10 shadow-[0_15px_30px_rgba(0,0,0,0.4)] relative overflow-hidden group cursor-pointer hover:bg-white/5 transition duration-300" onclick="OS.openApp('prayer')">
-            <div class="absolute -right-6 -top-6 text-emerald-500/10 transition transform group-hover:scale-110 duration-500"><i class="ph-fill ph-mosque text-9xl"></i></div>
-            <h4 class="text-xs font-bold text-gray-400 mb-3 uppercase tracking-widest flex items-center gap-2"><i class="ph-fill ph-clock text-emerald-400"></i> Next Prayer</h4>
-            <div class="text-3xl font-bold text-emerald-400 mb-1 tracking-tight" id="desk-wid-prayer-name">--</div>
-            <div class="text-xl font-medium text-white mb-4" id="desk-wid-prayer-time">--:--</div>
-            <div class="text-sm font-mono bg-black/40 inline-block px-3 py-1.5 rounded-lg text-gray-200 border border-white/5" id="desk-wid-prayer-countdown">00:00:00</div>
-        </div>
-    </div>
-
-    <div id="desktop-area"></div>
-    <div id="dock-container"></div>
-
-    <div id="widget-panel" class="glass">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-lg font-bold text-white">Today</h3>
-            <button onclick="OS.toggleWidgetPanel()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition"><i class="ph ph-x"></i></button>
-        </div>
-        
-        <div class="app-card relative overflow-hidden group cursor-pointer" onclick="OS.openApp('prayer'); OS.toggleWidgetPanel();">
-            <div class="absolute -right-6 -top-6 text-emerald-500/10 group-hover:text-emerald-500/20 transition"><i class="ph-fill ph-mosque text-8xl"></i></div>
-            <h4 class="text-sm font-bold text-gray-400 mb-1 uppercase tracking-wider">Next Prayer</h4>
-            <div class="text-3xl font-bold text-emerald-400 mb-1" id="wid-prayer-name">--</div>
-            <div class="text-lg text-white mb-2" id="wid-prayer-time">--:--</div>
-            <div class="text-sm text-gray-400 font-mono" id="wid-prayer-countdown">00:00:00</div>
-        </div>
-
-        <div class="app-card cursor-pointer" onclick="OS.openApp('calendar'); OS.toggleWidgetPanel();">
-            <h4 class="text-sm font-bold text-gray-400 mb-3 uppercase tracking-wider">Hijri Date</h4>
-            <div class="text-xl font-bold text-white leading-tight mb-2" id="wid-hijri-date">Loading...</div>
-            <div class="text-sm text-emerald-400" id="wid-greg-date">Loading...</div>
-        </div>
-
-        <div class="app-card cursor-pointer" onclick="OS.openApp('tasks'); OS.toggleWidgetPanel();">
-            <h4 class="text-sm font-bold text-gray-400 mb-3 uppercase tracking-wider flex justify-between"><span>Sunnah Habits</span> <i class="ph ph-check-circle text-emerald-400 text-lg"></i></h4>
-            <div id="wid-tasks-list" class="space-y-2">
-                <div class="text-sm text-gray-500">Loading tasks...</div>
-            </div>
-        </div>
-    </div>
-
-    <div id="os-toasts" class="fixed top-14 right-4 z-[10002] flex flex-col gap-3 pointer-events-none"></div>
-
-    <div id="start-menu" class="glass absolute top-[45px] left-3 w-72 rounded-2xl p-5 transform scale-95 opacity-0 pointer-events-none transition-all duration-200 z-[10000] origin-top-left flex flex-col gap-4 shadow-2xl border border-white/10">
-        <div class="flex items-center gap-4 border-b border-white/10 pb-4">
-            <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg">
-                <i class="ph-fill ph-user text-white text-2xl"></i>
-            </div>
-            <div>
-                <div class="font-bold text-base text-white" id="sm-user-name">Guest</div>
-                <div class="text-xs text-emerald-400 font-medium">Administrator</div>
-            </div>
-        </div>
-        <div class="flex flex-col gap-1 text-sm font-medium text-gray-200">
-            <button onclick="OS.openApp('settings'); OS.toggleStartMenu();" class="text-left px-3 py-2 rounded-lg hover:bg-white/10 transition flex items-center gap-3"><i class="ph ph-gear text-lg"></i> System Settings</button>
-            <button onclick="OS.openApp('calendar'); OS.toggleStartMenu();" class="text-left px-3 py-2 rounded-lg hover:bg-white/10 transition flex items-center gap-3"><i class="ph ph-calendar text-lg"></i> Hijri Calendar</button>
-            <div class="border-t border-white/10 my-2"></div>
-            <button onclick="OS.lockOS(); OS.toggleStartMenu();" class="text-left px-3 py-2 rounded-lg hover:bg-white/10 transition flex items-center gap-3"><i class="ph ph-lock text-lg"></i> Lock Screen</button>
-            <button onclick="location.reload()" class="text-left px-3 py-2 rounded-lg hover:bg-white/10 transition flex items-center gap-3"><i class="ph ph-arrows-clockwise text-lg"></i> Restart OS</button>
-        </div>
-    </div>
-    
-    <!-- Focus Mode Overlay Modal -->
-    <div id="focus-modal-overlay" class="fixed inset-0 z-[60000] hidden items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0">
-        <div id="focus-modal-content" class="glass p-6 rounded-3xl w-[340px] shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col items-center text-center border border-white/10">
-            <!-- Dynamic Content -->
-        </div>
-    </div>
-</div>
-
-<script src="script.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Noor</title>
+    <meta name="description" content="Quran, prayer times, qibla and dhikr in one app that works offline." />
+    <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
